@@ -19,7 +19,6 @@ jobs:
       - name: Build production image
         run: |
           docker build \
-            -t $ECR_URI:$GITHUB_SHA \
             ./apps/frontend-b
 
       - name: Push production image

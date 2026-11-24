@@ -6,5 +6,44 @@
 <body>
     <h1>Frontend B</h1>
     <p>Version: 1.0.0</p>
+    <p id="backend-status" role="status">Checking backend connection…</p>
+    <h2>Items</h2>
+    <p id="items-status" role="status">Loading items…</p>
+    <ul id="items"></ul>
+    <script>
+        const backendStatus = document.getElementById('backend-status');
+
+        fetch('/api/health')
+            .then(response => {
+                if (!response.ok) throw new Error('Health check failed');
+                return response.json();
+            })
+            .then(health => {
+                backendStatus.textContent = health.status === 'ok' ? 'Backend connected' : 'Backend unavailable';
+            })
+            .catch(() => {
+                backendStatus.textContent = 'Backend unavailable';
+            });
+
+        const itemsStatus = document.getElementById('items-status');
+        const itemsList = document.getElementById('items');
+
+        fetch('/api/items')
+            .then(response => {
+                if (!response.ok) throw new Error('Could not load items');
+                return response.json();
+            })
+            .then(items => {
+                for (const item of items) {
+                    const row = document.createElement('li');
+                    row.textContent = item.name;
+                    itemsList.append(row);
+                }
+                itemsStatus.textContent = items.length ? '' : 'No items found.';
+            })
+            .catch(() => {
+                itemsStatus.textContent = 'Could not load items.';
+            });
+    </script>
 </body>
 </html>

@@ -1,0 +1,27 @@
+services:
+  backend:
+    build: ./apps/backend
+    environment:
+      MYSQL_ADDR: ${MYSQL_ADDR:-host.docker.internal:3306}
+      MYSQL_USER: ${MYSQL_USER:-mysql}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-mysql}
+    ports:
+      - "127.0.0.1:8080:8080"
+
+  frontend-a:
+    build: ./apps/frontend-a
+    depends_on:
+      - backend
+    ports:
+      - "127.0.0.1:8091:80"
+    volumes:
+      - ./infrastructure/frontend.nginx.conf:/etc/nginx/conf.d/default.conf:ro
+
+  frontend-b:
+    build: ./apps/frontend-b
+    depends_on:
+      - backend
+    ports:
+      - "127.0.0.1:8092:80"
+    volumes:
+      - ./infrastructure/frontend.nginx.conf:/etc/nginx/conf.d/default.conf:ro
