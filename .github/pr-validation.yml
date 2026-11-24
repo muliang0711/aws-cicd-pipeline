@@ -1,0 +1,22 @@
+name: PR Validation
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate-frontend-a:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate Docker build
+        run: docker build -t frontend-a:test ./apps/frontend-a
+
+  validate-frontend-b:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate Docker build
+        run: docker build -t frontend-b:test ./apps/frontend-b

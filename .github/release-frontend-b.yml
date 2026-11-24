@@ -1,0 +1,26 @@
+name: Release Frontend A
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'apps/frontend-a/**'
+      - '.github/workflows/release-frontend-b.yml'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # AWS authentication and ECR login go here
+
+      - name: Build production image
+        run: |
+          docker build \
+            -t $ECR_URI:$GITHUB_SHA \
+            ./apps/frontend-b
+
+      - name: Push production image
+        run: docker push $ECR_URI:$GITHUB_SHA
